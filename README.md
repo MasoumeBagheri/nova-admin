@@ -4,20 +4,22 @@ A web-based administration panel for managing products and users in the NOVA Sto
 
 ## Overview
 
-NOVA Admin is a React-based admin dashboard built with TypeScript and Vite. It provides a simple interface for authentication, viewing products and users, and adding new records.
+NOVA Admin is a React-based admin dashboard built with TypeScript and Vite. It provides an interface for authentication, viewing products and users, and adding new records.
 
 The application uses FakeStoreAPI as its mock backend.
 
 ## Tech Stack
 
-- **React** – Building the user interface with functional components and hooks
+- **React 19** – Building the user interface with functional components and hooks
 - **TypeScript** – Static typing
 - **Vite** – Development server and build tool
 - **React Router** – Application routing
 - **Redux Toolkit** – Authentication state management
 - **Axios** – HTTP requests and API communication
 - **Styled Components** – Component-level styling
-- **Formik & Yup** – Form state management and validation
+- **Formik** – Form state management
+- **Yup** – Form validation
+- **Lucide React** – Icons
 
 ## Features
 
@@ -30,12 +32,13 @@ The application uses FakeStoreAPI as its mock backend.
 - User listing with search and pagination
 - Add new users using a validated form
 - Loading, error, and empty states
+- Persian RTL interface
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 22 or later
+- Node.js compatible with Vite 8
 - pnpm
 
 ### Installation
@@ -53,7 +56,11 @@ Install dependencies:
 pnpm install
 ```
 
-Create a local environment file using `.env.example` as a reference, then configure the API base URL.
+Create a `.env` file in the project root using `.env.example` as a reference:
+
+```env
+VITE_API_URL=https://fakestoreapi.com
+```
 
 ### Run the Development Server
 
@@ -73,6 +80,12 @@ pnpm build
 
 ```bash
 pnpm lint
+```
+
+### Preview Production Build
+
+```bash
+pnpm preview
 ```
 
 ## Test Login Credentials
@@ -98,16 +111,24 @@ src/
 │   ├── sidebar/
 │   └── user-form/
 ├── Modals/
+│   └── modal/
 ├── pages/
 │   ├── dashboard/
 │   ├── login/
 │   ├── products/
 │   └── users/
 ├── Redux/
+│   ├── auth.slice.ts
+│   └── store.ts
 ├── Routes/
+│   ├── App.tsx
+│   ├── main-layout.tsx
+│   ├── protected-route.tsx
+│   └── providers.tsx
 ├── shared/
 │   └── theme/
 ├── Storage/
+│   └── auth-storage.ts
 ├── types/
 │   ├── auth/
 │   ├── product/
@@ -122,56 +143,34 @@ src/
 
 The project uses a feature-oriented organization with separate directories for pages, reusable components, API services, types, and validation schemas.
 
-- `pages/`: Application pages.
+- `pages/`: Application pages and page-level logic.
 - `Components/`: Reusable UI components and forms.
+- `Modals/`: Reusable modal component.
 - `Redux/`: Redux store and authentication slice.
-- `Routes/`: Route configuration, protected routes, and providers.
-- `Utils/api/`: Shared Axios instance.
-- `Utils/services/`: Product and user API operations.
+- `Routes/`: Route configuration, protected routes, and application providers.
 - `shared/theme/`: Theme context, provider, and theme switcher.
 - `Storage/`: Authentication token persistence.
-- `types/`: TypeScript type definitions.
+- `types/`: TypeScript type definitions for authentication, products, and users.
+- `Utils/api/`: Shared Axios instance.
+- `Utils/services/`: Product and user API operations.
 - `Validations/`: Form validation schemas.
-- `Modals/`: Reusable modal component.
 
-This structure keeps page-level logic, reusable UI, API communication, and application state in separate areas.
+This structure separates page-level logic, reusable UI, API communication, application state, and validation.
 
 ## State Management
 
-Redux Toolkit is used for authentication state, including the login process and authentication initialization.
+The application uses different state management approaches based on the responsibility of each part:
 
-React Context is used for theme management.
+- **Redux Toolkit:** Authentication state, including the login process and authentication initialization.
+- **React Context:** Global theme management.
+- **React component state:** Page-specific state such as search queries, pagination, loading indicators, and modal visibility.
 
-Local component state is used for page-specific concerns such as search, pagination, loading, and modal visibility.
+This keeps global application state separate from local UI state.
 
 ## API Integration
 
 The application communicates with FakeStoreAPI through a shared Axios instance.
 
-API operations are organized into separate service files:
+The API base URL is configured using the `VITE_API_URL` environment variable.
 
-- `product.service.ts`
-- `user.service.ts`
-
-The API base URL is configured through an environment variable rather than being duplicated across service files.
-
-## FakeStoreAPI Limitations
-
-FakeStoreAPI is a mock REST API and does not provide a complete production backend.
-
-- Create operations return mock responses and do not guarantee permanent database persistence.
-- Authentication is based on the API's test credentials.
-- Product and user edit/delete operations are not implemented.
-- No real order processing, payment, or inventory management is included.
-
-Newly created records are added to the current application's state for demonstration purposes.
-
-## Authentication Note
-
-The authentication token is persisted in browser local storage in this demo.
-
-For a production application, secure server-managed cookies with `HttpOnly`, `Secure`, and appropriate `SameSite` settings are preferable, provided the backend supports them.
-
-## Scope
-
-This project was developed as part of the NOVA Store frontend challenge. It focuses on the requested administration features and does not aim to provide a complete production backend or enterprise-level access management.
+API operations are organized into separate service
