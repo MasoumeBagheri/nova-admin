@@ -1,4 +1,5 @@
 import * as Yup from "yup";
+import type { TranslationKey } from "@/Dictionary";
 
 export type UserFormValues = {
   firstname: string;
@@ -9,20 +10,23 @@ export type UserFormValues = {
   phone: string;
 };
 
-export const userSchema = Yup.object({
-  firstname: Yup.string().trim().required("وارد کردن نام الزامی است."),
+type Translate = (key: TranslationKey) => string;
 
-  lastname: Yup.string().trim().required("وارد کردن نام خانوادگی الزامی است."),
+export const createUserSchema = (t: Translate) =>
+  Yup.object({
+    firstname: Yup.string().trim().required(t("validation.firstname")),
 
-  username: Yup.string().trim().required("وارد کردن نام کاربری الزامی است."),
+    lastname: Yup.string().trim().required(t("validation.lastname")),
 
-  email: Yup.string()
-    .email("فرمت ایمیل صحیح نیست.")
-    .required("وارد کردن ایمیل الزامی است."),
+    username: Yup.string().trim().required(t("validation.username")),
 
-  password: Yup.string()
-    .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد.")
-    .required("وارد کردن رمز عبور الزامی است."),
+    email: Yup.string()
+      .email(t("validation.email"))
+      .required(t("validation.emailRequired")),
 
-  phone: Yup.string().trim().required("وارد کردن شماره تلفن الزامی است."),
-});
+    password: Yup.string()
+      .min(6, t("validation.passwordMin"))
+      .required(t("validation.passwordRequired")),
+
+    phone: Yup.string().trim().required(t("validation.phone")),
+  });

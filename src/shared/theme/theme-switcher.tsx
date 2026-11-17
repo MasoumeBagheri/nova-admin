@@ -3,18 +3,16 @@ import { Sun, Moon } from "lucide-react";
 import { useTheme } from "@/shared/theme/theme-context";
 
 const ThemeButton = styled.button`
-  width: 100%;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 11px 12px;
+  justify-content: center;
+  padding: 0;
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.06);
   color: #ffffff;
-  font-family: inherit;
-  font-size: 12px;
   cursor: pointer;
   transition: 0.2s;
 
@@ -23,29 +21,19 @@ const ThemeButton = styled.button`
   }
 `;
 
-const ThemeContent = styled.span`
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-const ThemeIcon = styled.span`
-  display: flex;
-  align-items: center;
-  color: #fbbf24;
-`;
-
 export const ThemeSwitcher = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <ThemeButton type="button" onClick={toggleTheme}>
-      <ThemeContent>
-        <ThemeIcon>
-          {theme === "light" ? <Moon size={17} /> : <Sun size={17} />}
-        </ThemeIcon>
-        <span>{theme === "light" ? "حالت تاریک" : "حالت روشن"}</span>
-      </ThemeContent>
+    <ThemeButton
+      type="button"
+      onClick={toggleTheme}
+      aria-label={
+        theme === "light" ? "Switch to dark mode" : "Switch to light mode"
+      }
+      title={theme === "light" ? "Dark mode" : "Light mode"}
+    >
+      {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
     </ThemeButton>
   );
 };

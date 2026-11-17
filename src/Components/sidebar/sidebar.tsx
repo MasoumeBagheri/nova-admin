@@ -1,4 +1,6 @@
 import { ThemeSwitcher } from "@/shared/theme/theme-switcher";
+import { LanguageSwitcher } from "@/shared/i18n/language-switcher";
+import { useTranslation } from "@/shared/i18n/use-translation";
 
 import {
   SidebarWrapper,
@@ -14,6 +16,8 @@ import {
 } from "./sidebar.styles";
 
 export const Sidebar = () => {
+  const { t } = useTranslation();
+
   return (
     <SidebarWrapper>
       <Logo>
@@ -24,29 +28,30 @@ export const Sidebar = () => {
       <Navigation>
         <NavigationLink to="/" end>
           <NavIcon>▦</NavIcon>
-          <span>داشبورد</span>
+          <span>{t("sidebar.dashboard")}</span>
         </NavigationLink>
 
         <NavigationLink to="/products">
           <NavIcon>▤</NavIcon>
-          <span>محصولات</span>
+          <span>{t("sidebar.products")}</span>
         </NavigationLink>
 
         <NavigationLink to="/users">
           <NavIcon>♙</NavIcon>
-          <span>کاربران</span>
+          <span>{t("sidebar.users")}</span>
         </NavigationLink>
       </Navigation>
 
       <SidebarActions>
+        <LanguageSwitcher />
         <ThemeSwitcher />
       </SidebarActions>
 
       <SidebarFooter>
-        <UserAvatar>ن</UserAvatar>
+        <UserAvatar>{t("sidebar.systemAdmin").charAt(0)}</UserAvatar>
         <UserInfo>
-          <strong>مدیر سیستم</strong>
-          <span>مدیر فروشگاه</span>
+          <strong>{t("sidebar.systemAdmin")}</strong>
+          <span>{t("sidebar.storeManager")}</span>
         </UserInfo>
       </SidebarFooter>
     </SidebarWrapper>

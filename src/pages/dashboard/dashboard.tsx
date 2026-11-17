@@ -7,6 +7,8 @@ import { getUsers } from "@/Utils/services/user.service";
 import type { Product } from "@/types/product/product.types";
 import type { User } from "@/types/user/user.types";
 
+import { useTranslation } from "@/shared/i18n/use-translation";
+
 import {
   DashboardHeader,
   StatsGrid,
@@ -17,6 +19,8 @@ import {
 } from "./dashboard.styles";
 
 const Dashboard = () => {
+  const { t } = useTranslation();
+
   const [products, setProducts] = useState<Product[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -33,24 +37,24 @@ const Dashboard = () => {
         setProducts(productsData);
         setUsers(usersData);
       } catch {
-        setError("دریافت اطلاعات داشبورد با خطا مواجه شد.");
+        setError(t("dashboard.error"));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchStats();
-  }, []);
+  }, [t]);
 
   return (
     <section>
       <DashboardHeader>
-        <h2>خوش آمدید به پنل مدیریت NOVA</h2>
-        <p>نمای کلی اطلاعات فروشگاه</p>
+        <h2>{t("dashboard.welcome")}</h2>
+        <p>{t("dashboard.description")}</p>
       </DashboardHeader>
 
       {isLoading ? (
-        <StatusMessage>در حال دریافت اطلاعات...</StatusMessage>
+        <StatusMessage>{t("dashboard.loading")}</StatusMessage>
       ) : error ? (
         <StatusMessage>{error}</StatusMessage>
       ) : (
@@ -60,7 +64,7 @@ const Dashboard = () => {
               <Package size={23} />
             </StatIcon>
             <StatInfo>
-              <span>تعداد محصولات</span>
+              <span>{t("dashboard.productsCount")}</span>
               <strong>{products.length}</strong>
             </StatInfo>
           </StatCard>
@@ -70,7 +74,7 @@ const Dashboard = () => {
               <UsersRound size={23} />
             </StatIcon>
             <StatInfo>
-              <span>تعداد کاربران</span>
+              <span>{t("dashboard.usersCount")}</span>
               <strong>{users.length}</strong>
             </StatInfo>
           </StatCard>

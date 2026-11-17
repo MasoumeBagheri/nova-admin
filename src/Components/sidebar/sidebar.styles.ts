@@ -107,4 +107,14 @@ export const SidebarActions = styled.div`
   margin-top: auto;
   padding: 16px 8px;
   border-top: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  button {
+    width: 40px;
+    height: 40px;
+    flex: 1;
+  }
 `;

@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 
 import { store, type AppDispatch } from "@/Redux/store";
 import { ThemeProvider } from "@/shared/theme/theme-provider";
+import { LanguageProvider } from "@/shared/i18n/language-provider";
 import { getSavedAuth } from "@/Storage/auth-storage";
 import { restoreAuth } from "@/Redux/auth.slice";
 
@@ -33,7 +34,9 @@ export const Providers = ({ children }: ProvidersProps) => {
   return (
     <Provider store={store}>
       <AuthInitializer />
-      <ThemeProvider>{children}</ThemeProvider>
+      <LanguageProvider>
+        <ThemeProvider>{children}</ThemeProvider>
+      </LanguageProvider>
     </Provider>
   );
 };

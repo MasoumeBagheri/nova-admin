@@ -1,18 +1,22 @@
 import * as Yup from "yup";
+import type { TranslationKey } from "@/Dictionary";
 
-export const productSchema = Yup.object({
-  title: Yup.string().trim().required("عنوان محصول الزامی است"),
+type Translate = (key: TranslationKey) => string;
 
-  price: Yup.number()
-    .typeError("قیمت باید عدد باشد")
-    .positive("قیمت باید بیشتر از صفر باشد")
-    .required("قیمت الزامی است"),
+export const createProductSchema = (t: Translate) =>
+  Yup.object({
+    title: Yup.string().trim().required(t("validation.productTitle")),
 
-  description: Yup.string().trim().required("توضیحات محصول الزامی است"),
+    price: Yup.number()
+      .typeError(t("validation.priceNumber"))
+      .positive(t("validation.pricePositive"))
+      .required(t("validation.priceRequired")),
 
-  category: Yup.string().required("انتخاب دسته‌بندی الزامی است"),
+    description: Yup.string().trim().required(t("validation.description")),
 
-  image: Yup.string()
-    .url("آدرس تصویر معتبر نیست")
-    .required("آدرس تصویر الزامی است"),
-});
+    category: Yup.string().required(t("validation.category")),
+
+    image: Yup.string()
+      .url(t("validation.imageUrl"))
+      .required(t("validation.imageRequired")),
+  });

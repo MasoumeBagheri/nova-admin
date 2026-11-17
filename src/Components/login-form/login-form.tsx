@@ -9,13 +9,14 @@ import {
   ErrorMessage as FormikErrorMessage,
 } from "formik";
 
-import { loginSchema } from "@/Validations/login.schema";
+import { createLoginSchema } from "@/Validations/login.schema";
 import type { LoginFormValues, AuthUser } from "@/types/auth/login.types";
 import { login, type AuthState } from "@/Redux/auth.slice";
 import { saveAuth } from "@/Storage/auth-storage";
 
 import type { AppDispatch } from "@/Redux/store";
 import { axiosInstance } from "@/Utils/api/axios-instance";
+import { useTranslation } from "@/shared/i18n/use-translation";
 
 import {
   FormWrapper,
@@ -27,15 +28,17 @@ import {
 
 export const LoginForm = () => {
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const [error, setError] = useState<string | null>(null);
-
-  const navigate = useNavigate();
 
   const initialValues: LoginFormValues = {
     username: "",
     password: "",
   };
+
+  const loginSchema = createLoginSchema(t);
 
   const handleSubmit = async (values: LoginFormValues) => {
     setError(null);
@@ -66,13 +69,13 @@ export const LoginForm = () => {
       navigate("/", { replace: true });
     } catch (error) {
       console.error("Login error:", error);
-      setError("ورود با خطا مواجه شد.");
+      setError(t("login.error"));
     }
   };
 
   return (
     <FormWrapper>
-      <h2>ورود به پنل مدیریت NOVA</h2>
+      <h2>{t("login.title")}</h2>
 
       {error && <FormErrorMessage>{error}</FormErrorMessage>}
 
@@ -84,19 +87,19 @@ export const LoginForm = () => {
         {({ isSubmitting }) => (
           <Form>
             <FormGroup>
-              <label htmlFor="username">نام کاربری</label>
+              <label htmlFor="username">{t("login.username")}</label>
               <Field id="username" name="username" />
               <FormikErrorMessage name="username" component={ErrorText} />
             </FormGroup>
 
             <FormGroup>
-              <label htmlFor="password">رمز عبور</label>
+              <label htmlFor="password">{t("login.password")}</label>
               <Field id="password" name="password" type="password" />
               <FormikErrorMessage name="password" component={ErrorText} />
             </FormGroup>
 
             <SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "در حال ورود..." : "ورود"}
+              {isSubmitting ? t("login.submitting") : t("login.submit")}
             </SubmitButton>
           </Form>
         )}

@@ -4,6 +4,7 @@ import { getUsers } from "@/Utils/services/user.service";
 import type { User } from "@/types/user/user.types";
 import { UserForm } from "@/Components/user-form";
 import { Modal } from "@/Modals/modal";
+import { useTranslation } from "@/shared/i18n/use-translation";
 
 import {
   PageHeader,
@@ -20,9 +21,11 @@ import {
 const PAGE_SIZE = 5;
 
 const Users = () => {
+  const { t } = useTranslation();
+
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [hasError, setHasError] = useState(false);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -33,7 +36,7 @@ const Users = () => {
         const data = await getUsers();
         setUsers(data);
       } catch {
-        setError("دریافت کاربران با خطا مواجه شد.");
+        setHasError(true);
       } finally {
         setIsLoading(false);
       }
@@ -78,37 +81,37 @@ const Users = () => {
   };
 
   if (isLoading) {
-    return <StatusMessage>در حال دریافت کاربران...</StatusMessage>;
+    return <StatusMessage>{t("users.loading")}</StatusMessage>;
   }
 
-  if (error) {
-    return <StatusMessage>{error}</StatusMessage>;
+  if (hasError) {
+    return <StatusMessage>{t("users.error")}</StatusMessage>;
   }
 
   return (
     <section>
       <PageHeader>
         <div>
-          <h2>مدیریت کاربران</h2>
-          <p>فهرست کاربران فروشگاه را مدیریت کنید.</p>
+          <h2>{t("users.title")}</h2>
+          <p>{t("users.description")}</p>
         </div>
 
         <AddUserButton type="button" onClick={() => setIsFormOpen(true)}>
-          + افزودن کاربر
+          + {t("users.add")}
         </AddUserButton>
       </PageHeader>
 
       <Toolbar>
         <SearchInput
           type="search"
-          placeholder="جستجو بر اساس نام، نام کاربری یا ایمیل..."
+          placeholder={t("users.search")}
           value={search}
           onChange={(event) => handleSearch(event.target.value)}
         />
       </Toolbar>
 
       <Modal
-        title="افزودن کاربر جدید"
+        title={t("users.addNew")}
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
       >
@@ -117,9 +120,7 @@ const Users = () => {
 
       {filteredUsers.length === 0 ? (
         <StatusMessage>
-          {search
-            ? "کاربری با این مشخصات پیدا نشد."
-            : "هنوز کاربری ثبت نشده است."}
+          {search ? t("users.notFound") : t("users.empty")}
         </StatusMessage>
       ) : (
         <>
@@ -127,12 +128,12 @@ const Users = () => {
             <Table>
               <thead>
                 <tr>
-                  <th>شناسه</th>
-                  <th>نام کاربری</th>
-                  <th>نام و نام خانوادگی</th>
-                  <th>ایمیل</th>
-                  <th>تلفن</th>
-                  <th>شهر</th>
+                  <th>{t("users.id")}</th>
+                  <th>{t("users.username")}</th>
+                  <th>{t("users.fullName")}</th>
+                  <th>{t("users.email")}</th>
+                  <th>{t("users.phone")}</th>
+                  <th>{t("users.city")}</th>
                 </tr>
               </thead>
 
@@ -160,7 +161,7 @@ const Users = () => {
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((page) => page - 1)}
               >
-                قبلی
+                {t("common.previous")}
               </PageButton>
 
               {Array.from({ length: totalPages }, (_, index) => index + 1).map(
@@ -181,7 +182,7 @@ const Users = () => {
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((page) => page + 1)}
               >
-                بعدی
+                {t("common.next")}
               </PageButton>
             </Pagination>
           )}

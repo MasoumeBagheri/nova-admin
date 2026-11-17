@@ -4,21 +4,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/Redux/auth.slice";
 import { clearAuth } from "@/Storage/auth-storage";
 import type { RootState, AppDispatch } from "@/Redux/store";
+import { useTranslation } from "@/shared/i18n/use-translation";
 
 import { HeaderWrapper, HeaderTitle, HeaderActions } from "./header.styles";
-
-const pageTitles: Record<string, string> = {
-  "/": "داشبورد",
-  "/products": "مدیریت محصولات",
-  "/users": "مدیریت کاربران",
-};
 
 export const Header = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
+  const { t } = useTranslation();
 
   const user = useSelector((state: RootState) => state.auth.user);
+
+  const pageTitles: Record<string, string> = {
+    "/": t("header.dashboard"),
+    "/products": t("header.products"),
+    "/users": t("header.users"),
+  };
 
   const handleLogout = () => {
     dispatch(logout());
@@ -34,7 +36,7 @@ export const Header = () => {
         {user && <span>{user.username}</span>}
 
         <button type="button" onClick={handleLogout}>
-          خروج
+          {t("header.logout")}
         </button>
       </HeaderActions>
     </HeaderWrapper>

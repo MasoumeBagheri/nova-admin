@@ -4,6 +4,7 @@ import { getProducts } from "@/Utils/services/product.service";
 import type { Product } from "@/types/product/product.types";
 import { ProductForm } from "@/Components/product-form";
 import { Modal } from "@/Modals/modal";
+import { useTranslation } from "@/shared/i18n/use-translation";
 
 import {
   PageHeader,
@@ -20,9 +21,11 @@ import {
 const PAGE_SIZE = 5;
 
 const Products = () => {
+  const { t } = useTranslation();
+
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [hasError, setHasError] = useState(false);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +36,7 @@ const Products = () => {
         const data = await getProducts();
         setProducts(data);
       } catch {
-        setError("دریافت محصولات با خطا مواجه شد.");
+        setHasError(true);
       } finally {
         setIsLoading(false);
       }
@@ -76,26 +79,26 @@ const Products = () => {
     <section>
       <PageHeader>
         <div>
-          <h2>مدیریت محصولات</h2>
-          <p>فهرست محصولات فروشگاه را مدیریت کنید.</p>
+          <h2>{t("products.title")}</h2>
+          <p>{t("products.description")}</p>
         </div>
 
         <AddProductButton type="button" onClick={() => setIsFormOpen(true)}>
-          + افزودن محصول
+          + {t("products.add")}
         </AddProductButton>
       </PageHeader>
 
       <Toolbar>
         <SearchInput
           type="search"
-          placeholder="جستجو بر اساس نام یا دسته‌بندی..."
+          placeholder={t("products.search")}
           value={search}
           onChange={(event) => handleSearch(event.target.value)}
         />
       </Toolbar>
 
       <Modal
-        title="افزودن محصول جدید"
+        title={t("products.addNew")}
         isOpen={isFormOpen}
         onClose={() => setIsFormOpen(false)}
       >
@@ -103,14 +106,12 @@ const Products = () => {
       </Modal>
 
       {isLoading ? (
-        <StatusMessage>در حال دریافت محصولات...</StatusMessage>
-      ) : error ? (
-        <StatusMessage>{error}</StatusMessage>
+        <StatusMessage>{t("products.loading")}</StatusMessage>
+      ) : hasError ? (
+        <StatusMessage>{t("products.error")}</StatusMessage>
       ) : filteredProducts.length === 0 ? (
         <StatusMessage>
-          {search
-            ? "محصولی با این مشخصات پیدا نشد."
-            : "هنوز محصولی ثبت نشده است."}
+          {search ? t("products.notFound") : t("products.empty")}
         </StatusMessage>
       ) : (
         <>
@@ -118,10 +119,10 @@ const Products = () => {
             <table>
               <thead>
                 <tr>
-                  <th>تصویر</th>
-                  <th>نام محصول</th>
-                  <th>دسته‌بندی</th>
-                  <th>قیمت</th>
+                  <th>{t("products.image")}</th>
+                  <th>{t("products.name")}</th>
+                  <th>{t("products.category")}</th>
+                  <th>{t("products.price")}</th>
                 </tr>
               </thead>
 
@@ -147,7 +148,7 @@ const Products = () => {
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((page) => page - 1)}
               >
-                قبلی
+                {t("common.previous")}
               </PageButton>
 
               {Array.from({ length: totalPages }, (_, index) => index + 1).map(
@@ -168,7 +169,7 @@ const Products = () => {
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((page) => page + 1)}
               >
-                بعدی
+                {t("common.next")}
               </PageButton>
             </Pagination>
           )}

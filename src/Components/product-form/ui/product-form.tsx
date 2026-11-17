@@ -9,8 +9,10 @@ import {
 import { createProduct } from "@/Utils/services/product.service";
 import type { Product } from "@/types/product/product.types";
 
-import { productSchema } from "@/Validations/product.schema";
+import { createProductSchema } from "@/Validations/product.schema";
 import type { ProductFormValues } from "@/types/product/product-form.types";
+import { useTranslation } from "@/shared/i18n/use-translation";
+
 import {
   FormWrapper,
   FormGroup,
@@ -33,6 +35,10 @@ const initialValues: ProductFormValues = {
 };
 
 export const ProductForm = ({ onSuccess }: ProductFormProps) => {
+  const { t } = useTranslation();
+
+  const productSchema = createProductSchema(t);
+
   const [message, setMessage] = useState<{
     type: "success" | "error";
     text: string;
@@ -58,12 +64,12 @@ export const ProductForm = ({ onSuccess }: ProductFormProps) => {
 
       setMessage({
         type: "success",
-        text: "محصول با موفقیت ثبت شد.",
+        text: t("products.created"),
       });
     } catch {
       setMessage({
         type: "error",
-        text: "افزودن محصول با خطا مواجه شد.",
+        text: t("products.createError"),
       });
     } finally {
       setSubmitting(false);
@@ -87,48 +93,60 @@ export const ProductForm = ({ onSuccess }: ProductFormProps) => {
         {({ isSubmitting }) => (
           <Form>
             <FormGroup>
-              <label htmlFor="title">عنوان محصول</label>
-              <Field id="title" name="title" placeholder="نام محصول" />
+              <label htmlFor="title">{t("productForm.title")}</label>
+              <Field
+                id="title"
+                name="title"
+                placeholder={t("productForm.titlePlaceholder")}
+              />
               <FormikErrorMessage name="title" component={ErrorText} />
             </FormGroup>
 
             <FormGroup>
-              <label htmlFor="price">قیمت</label>
+              <label htmlFor="price">{t("productForm.price")}</label>
               <Field
                 id="price"
                 name="price"
                 type="number"
-                placeholder="قیمت محصول"
+                placeholder={t("productForm.pricePlaceholder")}
               />
               <FormikErrorMessage name="price" component={ErrorText} />
             </FormGroup>
 
             <FormGroup>
-              <label htmlFor="description">توضیحات</label>
+              <label htmlFor="description">
+                {t("productForm.description")}
+              </label>
               <Field
                 as="textarea"
                 id="description"
                 name="description"
                 rows={4}
-                placeholder="توضیحات محصول"
+                placeholder={t("productForm.descriptionPlaceholder")}
               />
               <FormikErrorMessage name="description" component={ErrorText} />
             </FormGroup>
 
             <FormGroup>
-              <label htmlFor="category">دسته‌بندی</label>
+              <label htmlFor="category">{t("productForm.category")}</label>
               <Field as="select" id="category" name="category">
-                <option value="">انتخاب دسته‌بندی</option>
-                <option value="electronics">الکترونیک</option>
-                <option value="jewelery">زیورآلات</option>
-                <option value="men's clothing">لباس مردانه</option>
-                <option value="women's clothing">لباس زنانه</option>
+                <option value="">{t("productForm.selectCategory")}</option>
+                <option value="electronics">
+                  {t("productForm.electronics")}
+                </option>
+                <option value="jewelery">{t("productForm.jewelery")}</option>
+                <option value="men's clothing">
+                  {t("productForm.mensClothing")}
+                </option>
+                <option value="women's clothing">
+                  {t("productForm.womensClothing")}
+                </option>
               </Field>
               <FormikErrorMessage name="category" component={ErrorText} />
             </FormGroup>
 
             <FormGroup>
-              <label htmlFor="image">آدرس تصویر</label>
+              <label htmlFor="image">{t("productForm.image")}</label>
               <Field
                 id="image"
                 name="image"
@@ -138,7 +156,9 @@ export const ProductForm = ({ onSuccess }: ProductFormProps) => {
             </FormGroup>
 
             <SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "در حال ثبت..." : "افزودن محصول"}
+              {isSubmitting
+                ? t("productForm.submitting")
+                : t("productForm.submit")}
             </SubmitButton>
           </Form>
         )}

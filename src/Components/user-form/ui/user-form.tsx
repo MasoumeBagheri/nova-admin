@@ -3,7 +3,9 @@ import styled from "styled-components";
 
 import { createUser } from "@/Utils/services/user.service";
 import type { User } from "@/types/user/user.types";
-import { userSchema, type UserFormValues } from "@/Validations/user.schema";
+import type { UserFormValues } from "@/Validations/user.schema";
+import { createUserSchema } from "@/Validations/user.schema";
+import { useTranslation } from "@/shared/i18n/use-translation";
 
 type UserFormProps = {
   onSuccess: (user: User) => void;
@@ -83,6 +85,10 @@ const initialValues: UserFormValues = {
 };
 
 export const UserForm = ({ onSuccess }: UserFormProps) => {
+  const { t } = useTranslation();
+
+  const userSchema = createUserSchema(t);
+
   const handleSubmit = async (values: UserFormValues) => {
     const user = await createUser({
       email: values.email,
@@ -109,8 +115,12 @@ export const UserForm = ({ onSuccess }: UserFormProps) => {
           <FormWrapper>
             <div className="form-row">
               <div className="form-field">
-                <label htmlFor="firstname">نام</label>
-                <Field id="firstname" name="firstname" placeholder="نام" />
+                <label htmlFor="firstname">{t("userForm.firstname")}</label>
+                <Field
+                  id="firstname"
+                  name="firstname"
+                  placeholder={t("userForm.firstname")}
+                />
                 <ErrorMessage
                   name="firstname"
                   component="span"
@@ -119,11 +129,11 @@ export const UserForm = ({ onSuccess }: UserFormProps) => {
               </div>
 
               <div className="form-field">
-                <label htmlFor="lastname">نام خانوادگی</label>
+                <label htmlFor="lastname">{t("userForm.lastname")}</label>
                 <Field
                   id="lastname"
                   name="lastname"
-                  placeholder="نام خانوادگی"
+                  placeholder={t("userForm.lastname")}
                 />
                 <ErrorMessage
                   name="lastname"
@@ -134,8 +144,12 @@ export const UserForm = ({ onSuccess }: UserFormProps) => {
             </div>
 
             <div className="form-field">
-              <label htmlFor="username">نام کاربری</label>
-              <Field id="username" name="username" placeholder="نام کاربری" />
+              <label htmlFor="username">{t("userForm.username")}</label>
+              <Field
+                id="username"
+                name="username"
+                placeholder={t("userForm.username")}
+              />
               <ErrorMessage
                 name="username"
                 component="span"
@@ -144,7 +158,7 @@ export const UserForm = ({ onSuccess }: UserFormProps) => {
             </div>
 
             <div className="form-field">
-              <label htmlFor="email">ایمیل</label>
+              <label htmlFor="email">{t("userForm.email")}</label>
               <Field
                 id="email"
                 name="email"
@@ -155,12 +169,12 @@ export const UserForm = ({ onSuccess }: UserFormProps) => {
             </div>
 
             <div className="form-field">
-              <label htmlFor="password">رمز عبور</label>
+              <label htmlFor="password">{t("userForm.password")}</label>
               <Field
                 id="password"
                 name="password"
                 type="password"
-                placeholder="رمز عبور"
+                placeholder={t("userForm.password")}
               />
               <ErrorMessage
                 name="password"
@@ -170,13 +184,17 @@ export const UserForm = ({ onSuccess }: UserFormProps) => {
             </div>
 
             <div className="form-field">
-              <label htmlFor="phone">شماره تلفن</label>
-              <Field id="phone" name="phone" placeholder="شماره تلفن" />
+              <label htmlFor="phone">{t("userForm.phone")}</label>
+              <Field
+                id="phone"
+                name="phone"
+                placeholder={t("userForm.phone")}
+              />
               <ErrorMessage name="phone" component="span" className="error" />
             </div>
 
             <button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? "در حال ثبت..." : "ثبت کاربر"}
+              {isSubmitting ? t("userForm.submitting") : t("userForm.submit")}
             </button>
           </FormWrapper>
         </Form>
